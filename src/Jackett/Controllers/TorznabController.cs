@@ -143,7 +143,7 @@ namespace Jackett.Controllers
             }
 
             if (!string.IsNullOrWhiteSpace(torznabQuery.SanitizedSearchTerm)) { 
-                logBuilder.AppendFormat(" for: {0}", torznabQuery.GetQueryString());
+                logBuilder.AppendFormat(" for: {0}", torznabQuery.GetQueryString()); // TODO: User indexed formats if defined and GetQueryStringEx
             }
 
             logger.Info(logBuilder.ToString());

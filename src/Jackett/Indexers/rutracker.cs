@@ -11,6 +11,7 @@ using System.Text;
 using Jackett.Models.IndexerConfig;
 using System.Collections.Specialized;
 using AngleSharp.Parser.Html;
+using System.Globalization;
 
 namespace Jackett.Indexers
 {
@@ -1496,11 +1497,11 @@ namespace Jackett.Indexers
         public async Task<IEnumerable<ReleaseInfo>> PerformQuery(TorznabQuery query)
         {
             var releases = new List<ReleaseInfo>();
-            var searchString = query.GetQueryString();
+            var searchString = query.SanitizedSearchTerm + " " + query.GetEpisodeSearchStringEx("{0} {1}", "Сезон {0}", "Сезон {0} Серия {1}");
 
             var queryCollection = new NameValueCollection();
 
-            // if the search string is empty use the getnew view
+            // if the search string is empty use the getnew view (for RSS?)
             if (string.IsNullOrWhiteSpace(searchString))
             {
                 queryCollection.Add("nm", searchString);

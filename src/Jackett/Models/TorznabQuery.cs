@@ -68,6 +68,11 @@ namespace Jackett.Models
             return (SanitizedSearchTerm + " " + GetEpisodeSearchString()).Trim();
         }
 
+        public string GetQueryStringEx(string timeEpisodeFormat, string justSeasonFormat, string seasonAndEpisodeFormat)
+        {
+            return (SanitizedSearchTerm + " " + GetEpisodeSearchStringEx(timeEpisodeFormat, justSeasonFormat, seasonAndEpisodeFormat)).Trim ();
+        }
+
         // Some trackers don't support AND logic for search terms resulting in unwanted results.
         // Using this method we can AND filter it within jackett.
         // With limit we can limit the amount of characters which should be compared (use it if a tracker doesn't return the full title).
@@ -102,24 +107,28 @@ namespace Jackett.Models
 
         public string GetEpisodeSearchString()
         {
+            return GetEpisodeSearchStringEx("{0} {1}", "S{0:00}", "S{0:00}E{1:00}");
+        }
+
+        public string GetEpisodeSearchStringEx(string timeEpisodeFormat, string justSeasonFormat, string seasonAndEpisodeFormat)
+        {
             if (Season == 0)
                 return string.Empty;
 
             string episodeString;
             DateTime showDate;
-            if (DateTime.TryParseExact(string.Format("{0} {1}", Season, Episode), "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out showDate))
-                episodeString = showDate.ToString("yyyy.MM.dd");
-            else if (string.IsNullOrEmpty(Episode))
-                episodeString = string.Format("S{0:00}", Season);
+            if (DateTime.TryParseExact (string.Format (timeEpisodeFormat, Season, Episode), "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out showDate))
+                episodeString = showDate.ToString ("yyyy.MM.dd");
+            else if (string.IsNullOrEmpty (Episode))
+                episodeString = string.Format (justSeasonFormat, Season);
             else
-                episodeString = string.Format("S{0:00}E{1:00}", Season, ParseUtil.CoerceInt(Episode));
+                episodeString = string.Format (seasonAndEpisodeFormat, Season, ParseUtil.CoerceInt (Episode));
 
             return episodeString;
         }
 
         public static TorznabQuery FromHttpQuery(NameValueCollection query)
         {
-
             //{t=tvsearch&cat=5030%2c5040&extended=1&apikey=test&offset=0&limit=100&rid=24493&season=5&ep=1}
             var q = new TorznabQuery();
             q.QueryType = query["t"];

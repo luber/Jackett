@@ -481,8 +481,6 @@ namespace Jackett.Indexers
 
             while (VariablesRegExMatches.Success)
             {
-                string expanded = string.Empty;
-
                 string all = VariablesRegExMatches.Groups[0].Value;
                 string variable = VariablesRegExMatches.Groups[1].Value;
 
@@ -1129,7 +1127,11 @@ namespace Jackett.Indexers
             variables[".Query.TVMazeID"] = null;
             variables[".Query.TraktID"] = null;
 
-            variables[".Query.Episode"] = query.GetEpisodeSearchString();
+            if (query.QueryType == "tvsearch" && ID == "torrentsmd") { // TODO: add those template to definition
+                variables [".Query.Episode"] = query.GetEpisodeSearchStringEx ("{0} {1}", "Season {0}", "Season {0} Episode {1}");
+            } else {
+                variables[".Query.Episode"] = query.GetEpisodeSearchString();
+            }
 
             var mappedCategories = MapTorznabCapsToTrackers(query);
             variables[".Categories"] = mappedCategories;

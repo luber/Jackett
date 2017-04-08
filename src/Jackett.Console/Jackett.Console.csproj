@@ -41,6 +41,16 @@
   <PropertyGroup>
     <StartupObject>JackettConsole.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MONO|AnyCPU' ">
+    <PlatformTarget>anycpu</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\MONO</OutputPath>
+    <DefineConstants>DEBUG;TRACE;__MonoCS__</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.3.0\lib\net45\Autofac.dll</HintPath>
